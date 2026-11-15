@@ -1,6 +1,6 @@
 const cards = [...document.querySelectorAll('.card')];
 const menu = cards.map(card => ({name: card.querySelector('strong').textContent, image: card.querySelector('img').getAttribute('src')}));
-const sizes = {Regular:3500, Large:4500, Share:1500};
+const sizes = {Regular:3500, Large:4500, Share:15000};
 const toppings = ['Cookie crumble', 'Chocolate sauce', 'Sprinkles', 'Caramel drizzle'];
 const money = value => '₦' + value.toLocaleString('en-NG');
 const unit = line => sizes[line.size] + 500 * line.extras.length;
