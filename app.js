@@ -47,3 +47,45 @@ viewer.addEventListener('keydown',event => {
   if (event.key === 'ArrowLeft') showBoard(boardIndex - 1);
   if (event.key === 'ArrowRight') showBoard(boardIndex + 1);
 });
+
+const historyButton = document.createElement('button');
+historyButton.className = 'action';
+historyButton.textContent = 'My enquiries';
+document.querySelector('#flavours .section-title p:last-child:not(.eyebrow)').after(historyButton);
+
+function showDraftHistory() {
+  detail.replaceChildren();
+  const title = document.createElement('h2');
+  title.textContent = 'My enquiries';
+  const note = document.createElement('p');
+  note.textContent = 'Demo drafts saved in this browser. Staff receive an enquiry only through the connected prototype.';
+  detail.append(title, note);
+  const prefix = 'eleeshas-showcase-DEMO-';
+  const records = [];
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith(prefix)) continue;
+      try {
+        const record = JSON.parse(localStorage.getItem(key));
+        if (record && key === 'eleeshas-showcase-' + record.ref) records.push(record);
+      } catch { continue; }
+    }
+    records.sort((a, b) => b.ref.localeCompare(a.ref));
+    for (const record of records) {
+      const row = document.createElement('article');
+      const heading = document.createElement('h3');
+      const summary = document.createElement('p');
+      const reference = document.createElement('small');
+      heading.textContent = record.name + ' × ' + record.qty;
+      summary.textContent = [record.size, record.topping, 'Ask for price'].join(' · ');
+      reference.textContent = record.ref;
+      row.append(document.createElement('hr'), heading, summary, reference);
+      detail.append(row);
+    }
+    if (!records.length) note.textContent = 'Choose a flavour and save a demo draft. Your reference and scoop choices will appear here.';
+  } catch { note.textContent = 'Browser storage is unavailable.'; }
+  product.setAttribute('aria-label', 'My enquiries');
+  product.showModal();
+}
+historyButton.addEventListener('click', showDraftHistory);
+
